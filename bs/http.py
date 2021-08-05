@@ -358,7 +358,7 @@ class HTTPClient:
             await self.close()
             raise RuntimeError(
                 "There are {} API keys already created and none match a key_name of '{}'."
-                "Please specify a key_name kwarg, or go to 'https://developer.brawlstats.com' to delete "
+                "Please specify a key_name kwarg, or go to 'https://developer.brawlstars.com' to delete "
                 "unused keys.".format(current_key_count, self.key_names)
             )
 
@@ -403,11 +403,11 @@ class HTTPClient:
         login_data = {"email": email, "password": password}
         headers = {"content-type": "application/json"}
         async with self.__session.post(
-                "https://developer.brawlstats.com/api/login", json=login_data, headers=headers,
+                "https://developer.brawlstars.com/api/login", json=login_data, headers=headers,
         ) as sess:
             response_dict = await sess.json()
             LOG.debug(
-                "%s has received %s", "https://developer.brawlstats.com/api/login", response_dict,
+                "%s has received %s", "https://developer.brawlstars.com/api/login", response_dict,
             )
             if sess.status == 403:
                 raise InvalidCredentials(sess, response_dict)
@@ -417,7 +417,7 @@ class HTTPClient:
         return response_dict, session
 
     async def find_site_keys(self, headers):
-        url = "https://developer.brawlstats.com/api/apikey/list"
+        url = "https://developer.brawlstars.com/api/apikey/list"
         async with self.__session.post(url, json={}, headers=headers) as sess:
             existing_keys_dict = await sess.json()
             LOG.debug("%s has received %s", url, existing_keys_dict)
