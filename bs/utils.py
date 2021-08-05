@@ -14,22 +14,6 @@ T_co = TypeVar('T_co', covariant=True)
 
 
 def find(predicate: Callable[[T], Any], iterable: Iterable[T]) -> Optional[T]:
-    """A helper to return the first element found in the sequence
-    that meets the predicate.
-    For example: ::
-        leader = coc.utils.find(lambda m: m.trophies > 5000, clan.members)
-    would find the first :class:`~coc.ClanMember` who has more than 5000 trophies and return it.
-    If no members have more than 5000 trophies, then ``None`` is returned.
-    Parameters
-    -----------
-    predicate
-        A function that returns a boolean-like result.
-    iterable: iterable
-        The iterable to search through.
-    Returns
-    -------
-    The first item in the iterable which matches the predicate passed.
-    """
     for element in iterable:
         if predicate(element):
             return element
@@ -45,7 +29,6 @@ def get(iterable: Iterable[T], **attrs: Any) -> Optional[T]:
 
 
 def from_timestamp(timestamp: str) -> datetime:
-    """Parses the raw timestamp given by the API into a :class:`datetime.datetime` object."""
     return datetime.strptime(timestamp, "%Y%m%dT%H%M%S.000Z")
 
 

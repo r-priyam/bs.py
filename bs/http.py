@@ -18,7 +18,7 @@ from .errors import (
     InvalidCredentials,
     GatewayError,
 )
-from .utils import LRU, HTTPStats
+from .utils import LRU
 
 LOG = logging.getLogger(__name__)
 KEY_MINIMUM, KEY_MAXIMUM = 1, 10
@@ -131,7 +131,6 @@ class HTTPClient:
             connector=None,
             timeout=30.0,
             cache_max_size=10000,
-            stats_max_size=1000,
     ):
         self.client = client
         self.loop = loop
@@ -146,7 +145,6 @@ class HTTPClient:
 
         self.__lock = asyncio.Semaphore(per_second)
         self.cache = cache_max_size and LRU(cache_max_size)
-        self.stats = stats_max_size and HTTPStats(max_size=stats_max_size)
 
         if issubclass(throttler, BasicThrottler):
             self.__throttle = throttler(1 / per_second)
@@ -204,8 +202,6 @@ class HTTPClient:
                         perfcounter = (perf_counter() - start) * 1000
                         log_info = {"method": method, "url": url, "perf_counter": perfcounter,
                                     "status": response.status}
-                        if self.stats:
-                            self.stats[route.stats_key] = perfcounter
 
                         LOG.debug("API HTTP Request: %s", str(log_info))
                         data = await json_or_text(response)
