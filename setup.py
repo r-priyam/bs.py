@@ -19,7 +19,7 @@ setup(
     name="bs.py",
     author="priyamroy",
     url="https://github.com/priyamroy/bs.py",
-    packages=["coc"],
+    packages=["bs"],
     version=VERSION,
     license="MIT",
     description="A python wrapper for the Brawl Stars API",
