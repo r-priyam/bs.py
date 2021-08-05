@@ -125,7 +125,6 @@ class HTTPClient:
             password,
             key_names,
             key_count,
-            key_scopes,
             throttle_limit,
             throttler=BasicThrottler,
             connector=None,
@@ -138,7 +137,6 @@ class HTTPClient:
         self.password = password
         self.key_names = key_names
         self.key_count = key_count
-        self.key_scopes = key_scopes
         self.throttle_limit = throttle_limit
 
         per_second = key_count * throttle_limit
@@ -301,15 +299,12 @@ class HTTPClient:
     @staticmethod
     def create_cookies(response_dict, session):
         try:
-            return "session={};game-api-url={};game-api-token={}".format(
-                session, response_dict["swaggerUrl"], response_dict["temporaryAPIToken"]
-            )
+            return f"game-api-url={response_dict['swaggerUrl']}; session={session}; " \
+                   f"game-api-token={response_dict['temporaryAPIToken']}"
         except KeyError:
             return None
 
     async def get_keys(self):
-        self.client._ready.clear()
-
         response_dict, session = await self.login_to_site(self.email, self.password)
         cookies = self.create_cookies(response_dict, session)
 
@@ -434,7 +429,7 @@ class HTTPClient:
             "name": self.key_names,
             "description": "Created on {}".format(datetime.now().strftime("%c")),
             "cidrRanges": [await self.get_ip()],
-            "scopes": [self.key_scopes],
+            "scopes": None,  # Well API is being PITA if set to any value.
         }
 
         response = await self.request(
