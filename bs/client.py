@@ -52,16 +52,6 @@ class Client:
         self._wars = {}
 
     async def login(self, email: str, password: str) -> None:
-        """Retrieves all keys and creates an HTTP connection ready for use.
-        Parameters
-        ----------
-        email : str
-            Your password email from https://developer.clashofclans.com
-            This is used when updating keys automatically if your IP changes
-        password : str
-            Your password login from https://developer.clashofclans.com
-            This is used when updating keys automatically if your IP changes
-        """
         self.http = HTTPClient(
             client=self,
             email=email,
