@@ -1,12 +1,12 @@
 from aiohttp import ClientResponse
 
 
-class BrawlStatsExceptionException(Exception):
+class BrawlStarsException(Exception):
     """Base exception for the library
     """
 
 
-class HTTPException(BrawlStatsExceptionException):
+class HTTPException(BrawlStarsException):
     __slots__ = ("response", "status", "message", "reason", "_data")
 
     def _from_response(self, response, data):
