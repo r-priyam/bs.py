@@ -4,20 +4,13 @@ import re
 from collections import deque
 from datetime import datetime
 from itertools import cycle
-from time import process_time, perf_counter
+from time import perf_counter, process_time
 from urllib.parse import urlencode
 
 import aiohttp
 
-from .errors import (
-    HTTPException,
-    Maintenance,
-    NotFound,
-    InvalidArgument,
-    Forbidden,
-    InvalidCredentials,
-    GatewayError,
-)
+from .errors import (Forbidden, GatewayError, HTTPException, InvalidArgument,
+                     InvalidCredentials, Maintenance, NotFound)
 from .utils import LRU
 
 LOG = logging.getLogger(__name__)
@@ -35,7 +28,11 @@ async def json_or_text(response):
 
 
 class BasicThrottler:
-    __slots__ = ("sleep_time", "last_run", "lock",)
+    __slots__ = (
+        "sleep_time",
+        "last_run",
+        "lock",
+    )
 
     def __init__(self, sleep_time):
         self.sleep_time = sleep_time
@@ -107,7 +104,9 @@ class Route:
         url = self.API_PAGE_BASE + self.path if api_page else self.BASE + self.path
 
         if kwargs:
-            self.url = "{}?{}".format(url, urlencode({k: v for k, v in kwargs.items() if v is not None}))
+            self.url = "{}?{}".format(
+                url, urlencode({k: v for k, v in kwargs.items() if v is not None})
+            )
         else:
             self.url = url
 
@@ -118,18 +117,18 @@ class Route:
 
 class HTTPClient:
     def __init__(
-            self,
-            client,
-            loop,
-            email,
-            password,
-            key_names,
-            key_count,
-            throttle_limit,
-            throttler=BasicThrottler,
-            connector=None,
-            timeout=30.0,
-            cache_max_size=10000,
+        self,
+        client,
+        loop,
+        email,
+        password,
+        key_names,
+        key_count,
+        throttle_limit,
+        throttler=BasicThrottler,
+        connector=None,
+        timeout=30.0,
+        cache_max_size=10000,
     ):
         self.client = client
         self.loop = loop
@@ -149,9 +148,13 @@ class HTTPClient:
         elif issubclass(throttler, BatchThrottler):
             self.__throttle = throttler(per_second)
         else:
-            raise TypeError("throttler must be either BasicThrottler or BatchThrottler.")
+            raise TypeError(
+                "throttler must be either BasicThrottler or BatchThrottler."
+            )
 
-        self.__session = aiohttp.ClientSession(connector=connector, timeout=aiohttp.ClientTimeout(total=timeout))
+        self.__session = aiohttp.ClientSession(
+            connector=connector, timeout=aiohttp.ClientTimeout(total=timeout)
+        )
 
         self._keys = None
         self.keys = None
@@ -166,6 +169,7 @@ class HTTPClient:
         if self.__session:
             await self.__session.close()
 
+    # noinspection PyUnboundLocalVariable
     async def request(self, route, **kwargs):
         method = route.method
         url = route.url
@@ -195,22 +199,36 @@ class HTTPClient:
             try:
                 async with self.__lock, self.__throttle:
                     start = perf_counter()
-                    async with self.__session.request(method, url, **kwargs) as response:
+                    async with self.__session.request(
+                                        method, url, **kwargs
+                                    ) as response:
 
-                        perfcounter = (perf_counter() - start) * 1000
-                        log_info = {"method": method, "url": url, "perf_counter": perfcounter,
-                                    "status": response.status}
+                        _perf_counter = (perf_counter() - start) * 1000
+                        log_info = {
+                            "method": method,
+                            "url": url,
+                            "perf_counter": _perf_counter,
+                            "status": response.status,
+                        }
 
                         LOG.debug("API HTTP Request: %s", str(log_info))
                         data = await json_or_text(response)
 
                         try:
-                            delta = int(response.headers["Cache-Control"].strip("max-age="))
+                            delta = int(
+                                response.headers["Cache-Control"].strip("max-age=")
+                            )
                             data["_response_retry"] = delta
                             if cache is not None:
                                 self.cache[cache_control_key] = data
-                                LOG.debug("Cache-Control max age: %s seconds, key: %s", delta, cache_control_key)
-                                self.loop.call_later(delta, self._cache_remove, cache_control_key)
+                                LOG.debug(
+                                    "Cache-Control max age: %s seconds, key: %s",
+                                    delta,
+                                    cache_control_key,
+                                )
+                                self.loop.call_later(
+                                    delta, self._cache_remove, cache_control_key
+                                )
 
                         except (KeyError, AttributeError, ValueError):
                             if isinstance(data, dict):
@@ -224,11 +242,13 @@ class HTTPClient:
                             raise InvalidArgument(response, data)
 
                         if response.status == 403:
-                            if data.get("reason") in ["accessDenied.invalidIp"]:
-                                if not api_request:
-                                    await self.reset_key(key)
-                                    LOG.info("Reset Brawl Stars key")
-                                    return await self.request(route, **kwargs)
+                            if (
+                                data.get("reason") in ["accessDenied.invalidIp"]
+                                and not api_request
+                            ):
+                                await self.reset_key(key)
+                                LOG.info("Reset Brawl Stars key")
+                                return await self.request(route, **kwargs)
 
                             raise Forbidden(response, data)
 
@@ -286,6 +306,21 @@ class HTTPClient:
     def get_club(self, tag):
         return self.request(Route("GET", f"/clubs/{tag}"))
 
+    # rankings
+
+    # brawlers
+
+    def get_brawlers(self, **kwargs):
+        return self.request(Route("GET", f"/brawlers", **kwargs))
+
+    def get_brawler(self, _id):
+        return self.request(Route("GET", f"/brawlers/{_id}"))
+
+    # events
+
+    def get_event_rotation(self):
+        return self.request(Route("GET", f"/events/rotation"))
+
     # key updating management
 
     async def get_ip(self):
@@ -299,8 +334,10 @@ class HTTPClient:
     @staticmethod
     def create_cookies(response_dict, session):
         try:
-            return f"game-api-url={response_dict['swaggerUrl']}; session={session}; " \
-                   f"game-api-token={response_dict['temporaryAPIToken']}"
+            return (
+                f"game-api-url={response_dict['swaggerUrl']}; session={session}; "
+                f"game-api-token={response_dict['temporaryAPIToken']}"
+            )
         except KeyError:
             return None
 
@@ -316,13 +353,21 @@ class HTTPClient:
         ip = await self.get_ip()
         current_keys = (await self.find_site_keys(headers))["keys"]
 
-        self._keys = [key["key"] for key in current_keys if key["name"] == self.key_names and ip in key["cidrRanges"]]
+        self._keys = [
+            key["key"]
+            for key in current_keys
+            if key["name"] == self.key_names and ip in key["cidrRanges"]
+        ]
 
         required_key_count = self.key_count
         current_key_count = len(current_keys)
 
         if required_key_count > len(self._keys):
-            for key in (k for k in current_keys if k["name"] == self.key_names and ip not in k["cidrRanges"]):
+            for key in (
+                k
+                for k in current_keys
+                if k["name"] == self.key_names and ip not in k["cidrRanges"]
+            ):
                 try:
                     await self.delete_key(cookies, key["id"])
                 except (InvalidArgument, NotFound):
@@ -342,14 +387,21 @@ class HTTPClient:
                 self.client.dispatch("on_key_reset", new)
                 current_key_count += 1
 
-            if current_key_count == KEY_MAXIMUM and len(self._keys) < required_key_count:
-                LOG.critical("%s keys were requested to be used, but a maximum of %s could be "
-                             "found/made on the developer site, as it has a maximum of 10 keys per account. "
-                             "Please delete some keys or lower your `key_count` level."
-                             "I will use %s keys for the life of this client.",
-                             required_key_count, current_key_count, current_key_count)
+        if (
+            current_key_count == KEY_MAXIMUM
+            and len(self._keys) < required_key_count
+        ):
+            LOG.critical(
+                "%s keys were requested to be used, but a maximum of %s could be "
+                "found/made on the developer site, as it has a maximum of 10 keys per account. "
+                "Please delete some keys or lower your `key_count` level."
+                "I will use %s keys for the life of this client.",
+                required_key_count,
+                current_key_count,
+                current_key_count,
+            )
 
-        if len(self._keys) == 0:
+        if not self._keys:
             await self.close()
             raise RuntimeError(
                 "There are {} API keys already created and none match a key_name of '{}'."
@@ -398,11 +450,15 @@ class HTTPClient:
         login_data = {"email": email, "password": password}
         headers = {"content-type": "application/json"}
         async with self.__session.post(
-                "https://developer.brawlstars.com/api/login", json=login_data, headers=headers,
+            "https://developer.brawlstars.com/api/login",
+            json=login_data,
+            headers=headers,
         ) as sess:
             response_dict = await sess.json()
             LOG.debug(
-                "%s has received %s", "https://developer.brawlstars.com/api/login", response_dict,
+                "%s has received %s",
+                "https://developer.brawlstars.com/api/login",
+                response_dict,
             )
             if sess.status == 403:
                 raise InvalidCredentials(sess, response_dict)
@@ -420,10 +476,7 @@ class HTTPClient:
         return existing_keys_dict
 
     async def create_key(self, cookies):
-        headers = {
-            "cookie": cookies,
-            "content-type": "application/json"
-        }
+        headers = {"cookie": cookies, "content-type": "application/json"}
 
         data = {
             "name": self.key_names,
@@ -433,7 +486,10 @@ class HTTPClient:
         }
 
         response = await self.request(
-            Route("POST", "/apikey/create", api_page=True), json=data, headers=headers, api_request=True,
+            Route("POST", "/apikey/create", api_page=True),
+            json=data,
+            headers=headers,
+            api_request=True,
         )
         return response["key"]["key"]
 
@@ -443,5 +499,8 @@ class HTTPClient:
         data = {"id": key_id}
 
         return self.request(
-            Route("POST", "/apikey/revoke", api_page=True), json=data, headers=headers, api_request=True,
+            Route("POST", "/apikey/revoke", api_page=True),
+            json=data,
+            headers=headers,
+            api_request=True,
         )
