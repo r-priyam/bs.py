@@ -21,8 +21,8 @@ class Player(ClubPlayer):
         "trio_victories",
         "duo_victories",
         "solo_victories",
-        "best_RoboRumble_time",
-        "best_BigBrawler_time",
+        "best_roborumble_time",
+        "best_bigbrawler_time",
     )
 
     def __init__(self, *, data):
@@ -43,5 +43,5 @@ class Player(ClubPlayer):
         self.trio_victories = data_get("3vs3Victories")
         self.duo_victories = data_get("duoVictories")
         self.solo_victories = data_get("soloVictories")
-        self.best_RoboRumble_time = data_get("bestRoboRumbleTime")
-        self.best_BigBrawler_time = data_get("bestTimeAsBigBrawler")
+        self.best_roborumble_time = data_get("bestRoboRumbleTime")
+        self.best_bigbrawler_time = data_get("bestTimeAsBigBrawler")
