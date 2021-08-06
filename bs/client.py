@@ -108,7 +108,7 @@ class Client:
             data = await self.http.get_player_battle_log(player_tag)
             return data
 
-    async def get_player(self, player_tag: str):
+    async def get_player(self, player_tag: str) -> Player:
         if self.correct_tags:
             player_tag = correct_tag(player_tag)
 

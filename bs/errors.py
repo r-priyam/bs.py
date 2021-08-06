@@ -2,8 +2,7 @@ from aiohttp import ClientResponse
 
 
 class BrawlStarsException(Exception):
-    """Base exception for the library
-    """
+    """Base exception for the library"""
 
 
 class HTTPException(BrawlStarsException):
