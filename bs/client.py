@@ -114,4 +114,4 @@ class Client:
 
         if self.http:
             data = await self.http.get_player(player_tag)
-            return Player(data=data, client=self.http)
+            return Player(data=data)
