@@ -20,3 +20,31 @@ class BasePlayer:
 
         self.tag = data.get("tag")
         self.name = data.get("name")
+
+class BaseClub:
+    __slots__ = ("_tag", "_name")
+
+    def __eq__(self, other):
+        return isinstance(other, BaseClub) and self.tag == other.tag
+
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return "<%s tag=%s name=%s>" % (
+            self.__class__.__name__,
+            self.tag,
+            self.name,
+        )
+
+    def __init__(self, *, data: dict):
+        self._name = data.get('name')
+        self._tag = data.get('tag')
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @property
+    def tag(self) -> str:
+        return self._tag
