@@ -1,3 +1,9 @@
+__all__ = (
+    "BasePlayer",
+    "BaseClub"
+)
+
+
 class BasePlayer:
     __slots__ = ("tag", "name", "_client", "_response_retry")
 
@@ -14,12 +20,13 @@ class BasePlayer:
     def __eq__(self, other):
         return isinstance(other, BasePlayer) and self.tag == other.tag
 
-    def __init__(self, *, data, client, **_):
+    def __init__(self, *, data, client=None, **_):
         self._client = client
         self._response_retry = data.get("_response_retry")
 
-        self.tag = data.get("tag")
-        self.name = data.get("name")
+        self.tag: str = data.get("tag")
+        self.name: str = data.get("name")
+
 
 class BaseClub:
     __slots__ = ("_tag", "_name")

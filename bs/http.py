@@ -300,8 +300,10 @@ class HTTPClient:
 
     # clubs
 
-    def get_club_members(self, tag):
-        return self.request(Route("GET", f"/clubs/{tag}/members"))
+    def get_club_members(self, tag, limit: int = None):
+        if limit is None:
+            return self.request(Route("GET", f"/clubs/{tag}/members"))
+        return self.request(Route("GET", f"/clubs/{tag}/members?limit={limit}"))
 
     def get_club(self, tag):
         return self.request(Route("GET", f"/clubs/{tag}"))
@@ -461,6 +463,7 @@ class HTTPClient:
                 response_dict,
             )
             if sess.status == 403:
+                await self.close()
                 raise InvalidCredentials(sess, response_dict)
 
             session = sess.cookies.get("session").value
