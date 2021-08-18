@@ -2,6 +2,7 @@ import asyncio
 import logging
 from typing import Type, Union
 
+from .clubs import Club
 from .http import BasicThrottler, BatchThrottler, HTTPClient
 from .players import Player
 from .utils import correct_tag
@@ -115,3 +116,11 @@ class Client:
         if self.http:
             data = await self.http.get_player(player_tag)
             return Player(data=data)
+
+    async def get_club(self, club_tag: str):
+        if self.correct_tags:
+            club_tag = correct_tag(club_tag)
+
+        if self.http:
+            data = await self.http.get_club(club_tag)
+            return Club(data=data)
