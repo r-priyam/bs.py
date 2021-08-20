@@ -300,10 +300,8 @@ class HTTPClient:
 
     # clubs
 
-    def get_club_members(self, tag, limit: int = None):
-        if limit is None:
-            return self.request(Route("GET", f"/clubs/{tag}/members"))
-        return self.request(Route("GET", f"/clubs/{tag}/members?limit={limit}"))
+    def get_club_members(self, tag, **kwargs):
+        return self.request(Route("GET", f"/clubs/{tag}/members", **kwargs))
 
     def get_club(self, tag):
         return self.request(Route("GET", f"/clubs/{tag}"))

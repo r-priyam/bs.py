@@ -133,6 +133,6 @@ class Client:
             club_tag = correct_tag(club_tag)
 
         if self.http:
-            data = await self.http.get_club_members(club_tag, limit)
+            data = await self.http.get_club_members(club_tag, limit=limit)
             data_list = data.get("items")
             return [ClubMember(data=i) for i in data_list]
