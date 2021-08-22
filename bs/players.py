@@ -1,3 +1,9 @@
+__all__ = (
+    "ClubPlayer",
+    "Player"
+)
+
+
 class ClubPlayer:
     __slots__ = ("club_tag", "club_name")
 

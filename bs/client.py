@@ -1,14 +1,17 @@
 import asyncio
 import logging
+import typing
 from typing import Type, Union
 
-from .clubs import Club
+from .clubs import Club, ClubMember
 from .http import BasicThrottler, BatchThrottler, HTTPClient
 from .players import Player
 from .utils import correct_tag
 
 KEY_MINIMUM, KEY_MAXIMUM = 1, 10
 LOG = logging.getLogger(__name__)
+
+__all__ = "Client"
 
 
 class Client:
@@ -117,10 +120,19 @@ class Client:
             data = await self.http.get_player(player_tag)
             return Player(data=data)
 
-    async def get_club(self, club_tag: str):
+    async def get_club(self, club_tag: str) -> Club:
         if self.correct_tags:
             club_tag = correct_tag(club_tag)
 
         if self.http:
             data = await self.http.get_club(club_tag)
             return Club(data=data)
+
+    async def get_club_members(self, club_tag: str, limit: int = None) -> typing.List[ClubMember]:
+        if self.correct_tags:
+            club_tag = correct_tag(club_tag)
+
+        if self.http:
+            data = await self.http.get_club_members(club_tag, limit=limit)
+            data_list = data.get("items")
+            return [ClubMember(data=i) for i in data_list]
