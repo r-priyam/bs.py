@@ -43,9 +43,7 @@ def from_timestamp(timestamp: str) -> datetime:
 
 
 def is_valid_tag(tag: str) -> bool:
-    if TAG_VALIDATOR.match(correct_tag(tag)):
-        return True
-    return False
+    return bool(TAG_VALIDATOR.match(correct_tag(tag)))
 
 
 def correct_tag(tag: str, prefix: str = "#") -> str:
@@ -96,7 +94,7 @@ def item(
         return _object
     if (index or index_type) and not attribute:
         return _object[index_type]
-    if attribute and not (index or index_type):
+    if not index and not index_type:
         return attr_get(_object)
     if index_before_attribute:
         return attr_get(_object[index_type])
