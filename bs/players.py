@@ -1,7 +1,4 @@
-__all__ = (
-    "ClubPlayer",
-    "Player"
-)
+__all__ = ("ClubPlayer", "Player")
 
 
 class ClubPlayer:
@@ -45,7 +42,9 @@ class Player(ClubPlayer):
         self.best_power_play_points = data_get("highestPowerPlayPoints")
         self.exp_level = data_get("expLevel")
         self.exp_points = data_get("expPoints")
-        self.qualified_for_championship = data_get("isQualifiedFromChampionshipChallenge")
+        self.qualified_for_championship = data_get(
+            "isQualifiedFromChampionshipChallenge"
+        )
         self.trio_victories = data_get("3vs3Victories")
         self.duo_victories = data_get("duoVictories")
         self.solo_victories = data_get("soloVictories")

@@ -1,7 +1,4 @@
-__all__ = (
-    "BasePlayer",
-    "BaseClub"
-)
+__all__ = ("BasePlayer", "BaseClub")
 
 
 class BasePlayer:
@@ -45,8 +42,8 @@ class BaseClub:
         )
 
     def __init__(self, *, data: dict):
-        self._name = data.get('name')
-        self._tag = data.get('tag')
+        self._name = data.get("name")
+        self._tag = data.get("tag")
 
     @property
     def name(self) -> str:

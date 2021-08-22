@@ -5,12 +5,22 @@ from collections import deque
 from datetime import datetime
 from functools import wraps
 from operator import attrgetter
-from typing import Any, Callable, Generic, Iterable, List, Optional, Type, TypeVar, Union
+from typing import (
+    Any,
+    Callable,
+    Generic,
+    Iterable,
+    List,
+    Optional,
+    Type,
+    TypeVar,
+    Union,
+)
 
 TAG_VALIDATOR = re.compile("^#?[PYLQGRJCUV0289]+$")
 
-T = TypeVar('T')
-T_co = TypeVar('T_co', covariant=True)
+T = TypeVar("T")
+T_co = TypeVar("T_co", covariant=True)
 
 
 def find(predicate: Callable[[T], Any], iterable: Iterable[T]) -> Optional[T]:
@@ -61,18 +71,25 @@ def corrected_tag() -> Callable[[Callable[..., T]], Callable[..., T]]:
 
 
 def maybe_sort(
-        seq: Iterable[T], sort: bool, itr: bool = False, key: Callable[[str], Any] = attrgetter("order")
+    seq: Iterable[T],
+    sort: bool,
+    itr: bool = False,
+    key: Callable[[str], Any] = attrgetter("order"),
 ) -> Union[List[T], Iterable[T]]:
-    return (list, iter)[itr](n for n in sorted(seq, key=key)) if sort else (list, iter)[itr](n for n in seq)
+    return (
+        (list, iter)[itr](n for n in sorted(seq, key=key))
+        if sort
+        else (list, iter)[itr](n for n in seq)
+    )
 
 
 def item(
-        _object,
-        *,
-        index: bool = False,
-        index_type: Union[int, str] = 0,
-        attribute: str = None,
-        index_before_attribute: bool = True
+    _object,
+    *,
+    index: bool = False,
+    index_type: Union[int, str] = 0,
+    attribute: str = None,
+    index_before_attribute: bool = True
 ):
     attr_get = attrgetter(attribute or "")
     if not (index or index_type or attribute):
@@ -108,7 +125,7 @@ class _CachedProperty(Generic[T, T_co]):
     def __init__(self, name: str, function: Callable[[T], T_co]) -> None:
         self.name = name
         self.function = function
-        self.__doc__ = getattr(function, '__doc__')
+        self.__doc__ = getattr(function, "__doc__")
 
     def __get__(self, instance: T, owner: Type[T]) -> T_co:
         try:
@@ -119,7 +136,9 @@ class _CachedProperty(Generic[T, T_co]):
             return result
 
 
-def cached_property(name: str) -> Callable[[Callable[[T], T_co]], _CachedProperty[T, T_co]]:
+def cached_property(
+    name: str,
+) -> Callable[[Callable[[T], T_co]], _CachedProperty[T, T_co]]:
     def deco(func: Callable[[T], T_co]) -> _CachedProperty[T, T_co]:
         return _CachedProperty(name, func)
 

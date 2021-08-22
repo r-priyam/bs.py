@@ -12,5 +12,5 @@ async def main(tag: str):
     print(f"Player's Club tag: {player.club_tag}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     client.loop.run_until_complete(main(tag="#9P8YPU2RQ"))

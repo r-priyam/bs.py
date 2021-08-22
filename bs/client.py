@@ -128,7 +128,9 @@ class Client:
             data = await self.http.get_club(club_tag)
             return Club(data=data)
 
-    async def get_club_members(self, club_tag: str, limit: int = None) -> typing.List[ClubMember]:
+    async def get_club_members(
+        self, club_tag: str, limit: int = None
+    ) -> typing.List[ClubMember]:
         if self.correct_tags:
             club_tag = correct_tag(club_tag)
 

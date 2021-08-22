@@ -9,10 +9,17 @@ with open(os.path.join(os.getcwd(), "requirements.txt")) as f:
     REQUIREMENTS = f.read().splitlines()
 
 
-with open('bs/__init__.py') as f:
-    VERSION = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
+with open("bs/__init__.py") as f:
+    VERSION = re.search(
+        r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE
+    ).group(1)
 if "a" in VERSION:
-    VERSION += "+" + subprocess.check_output(["git", "rev-parse", "--short", "HEAD"]).decode("utf-8").strip()
+    VERSION += (
+        "+"
+        + subprocess.check_output(["git", "rev-parse", "--short", "HEAD"])
+        .decode("utf-8")
+        .strip()
+    )
 
 with open("README.md") as f:
     README = f.read()
@@ -27,7 +34,7 @@ setup(
     description="A python wrapper for the Brawl Stars API",
     long_description=README,
     long_description_content_type="text/markdown",
-    keywords=['brawl stars', 'bs api', 'brawl stars python', 'brawl stars api'],
+    keywords=["brawl stars", "bs api", "brawl stars python", "brawl stars api"],
     python_requires=">=3.6.0",
     install_requires=REQUIREMENTS,
     classifiers={
@@ -36,5 +43,5 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
-    }
+    },
 )

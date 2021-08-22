@@ -9,8 +9,15 @@ from urllib.parse import urlencode
 
 import aiohttp
 
-from .errors import (Forbidden, GatewayError, HTTPException, InvalidArgument,
-                     InvalidCredentials, Maintenance, NotFound)
+from .errors import (
+    Forbidden,
+    GatewayError,
+    HTTPException,
+    InvalidArgument,
+    InvalidCredentials,
+    Maintenance,
+    NotFound,
+)
 from .utils import LRU
 
 LOG = logging.getLogger(__name__)
@@ -200,8 +207,8 @@ class HTTPClient:
                 async with self.__lock, self.__throttle:
                     start = perf_counter()
                     async with self.__session.request(
-                                        method, url, **kwargs
-                                    ) as response:
+                        method, url, **kwargs
+                    ) as response:
 
                         _perf_counter = (perf_counter() - start) * 1000
                         log_info = {
@@ -387,10 +394,7 @@ class HTTPClient:
                 self.client.dispatch("on_key_reset", new)
                 current_key_count += 1
 
-        if (
-            current_key_count == KEY_MAXIMUM
-            and len(self._keys) < required_key_count
-        ):
+        if current_key_count == KEY_MAXIMUM and len(self._keys) < required_key_count:
             LOG.critical(
                 "%s keys were requested to be used, but a maximum of %s could be "
                 "found/made on the developer site, as it has a maximum of 10 keys per account. "

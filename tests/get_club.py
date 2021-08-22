@@ -10,14 +10,15 @@ async def main(club_tag: str):
     print(f"Club description: {club.description}")
     print(f"Club trophies: {club.trophies}")
     print(club.members[0].name)
-    vice_presidents = [i.name for i in club.members if i.role == 'vicePresident']
+    vice_presidents = [i.name for i in club.members if i.role == "vicePresident"]
     print(*vice_presidents, sep=", ")
 
-    club_members = await client.get_club_members(club_tag,
-                                                 limit=10)  # limits the number of items returned from the API response
+    club_members = await client.get_club_members(
+        club_tag, limit=10
+    )  # limits the number of items returned from the API response
     for i in club_members:
         print(i.name, i.role, i.trophies, sep=" - ")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     client.loop.run_until_complete(main(club_tag="#2L2CJJRQV"))
