@@ -1,3 +1,5 @@
+from typing import Optional
+
 __all__ = ("ClubPlayer", "Player")
 
 
@@ -6,8 +8,8 @@ class ClubPlayer:
 
     def __init__(self, *, data) -> None:
         _data_get = data.get("club")
-        self.club_name = _data_get.get("name")
-        self.club_tag = _data_get.get("tag")
+        self.club_name: str = _data_get.get("name")
+        self.club_tag: str = _data_get.get("tag")
 
 
 class Player(ClubPlayer):
@@ -28,25 +30,23 @@ class Player(ClubPlayer):
         "best_bigbrawler_time",
     )
 
-    def __init__(self, *, data):
+    def __init__(self, *, data) -> None:
         super().__init__(data=data)
         self._from_data(data)
 
     def _from_data(self, data: dict) -> None:
         data_get = data.get
-        self.tag = data_get("tag")
-        self.name = data_get("name")
-        self.name_color = data_get("nameColor")
-        self.trophies = data_get("trophies")
-        self.best_trophies = data_get("highestTrophies")
-        self.best_power_play_points = data_get("highestPowerPlayPoints")
-        self.exp_level = data_get("expLevel")
-        self.exp_points = data_get("expPoints")
-        self.qualified_for_championship = data_get(
-            "isQualifiedFromChampionshipChallenge"
-        )
-        self.trio_victories = data_get("3vs3Victories")
-        self.duo_victories = data_get("duoVictories")
-        self.solo_victories = data_get("soloVictories")
-        self.best_roborumble_time = data_get("bestRoboRumbleTime")
-        self.best_bigbrawler_time = data_get("bestTimeAsBigBrawler")
+        self.tag: Optional[str] = data_get("tag")
+        self.name: Optional[str] = data_get("name")
+        self.name_color: Optional[str] = data_get("nameColor")
+        self.trophies: Optional[int] = data_get("trophies")
+        self.best_trophies: Optional[int] = data_get("highestTrophies")
+        self.best_power_play_points: Optional[int] = data_get("highestPowerPlayPoints")
+        self.exp_level: Optional[int] = data_get("expLevel")
+        self.exp_points: Optional[int] = data_get("expPoints")
+        self.qualified_for_championship: Optional[bool] = data_get("isQualifiedFromChampionshipChallenge")
+        self.trio_victories: Optional[int] = data_get("3vs3Victories")
+        self.duo_victories: Optional[int] = data_get("duoVictories")
+        self.solo_victories: Optional[int] = data_get("soloVictories")
+        self.best_roborumble_time: Optional[int] = data_get("bestRoboRumbleTime")
+        self.best_bigbrawler_time: Optional[int] = data_get("bestTimeAsBigBrawler")
