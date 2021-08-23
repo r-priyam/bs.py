@@ -318,7 +318,7 @@ class HTTPClient:
     # brawlers
 
     def get_brawlers(self, **kwargs):
-        return self.request(Route("GET", f"/brawlers", **kwargs))
+        return self.request(Route("GET", "/brawlers", **kwargs))
 
     def get_brawler(self, _id):
         return self.request(Route("GET", f"/brawlers/{_id}"))
@@ -326,7 +326,7 @@ class HTTPClient:
     # events
 
     def get_event_rotation(self):
-        return self.request(Route("GET", f"/events/rotation"))
+        return self.request(Route("GET", "/events/rotation"))
 
     # key updating management
 
