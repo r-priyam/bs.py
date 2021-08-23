@@ -1,4 +1,4 @@
-from typing import List, Literal, Union
+from typing import List, Literal, Optional
 
 from .abc import BaseClub, BasePlayer
 
@@ -13,7 +13,7 @@ class ClubMember(BasePlayer):
         self._data = data
 
     @property
-    def name_color(self) -> Union[str, None]:
+    def name_color(self) -> Optional[str]:
         return self._data.get("nameColor")
 
     @property
@@ -21,7 +21,7 @@ class ClubMember(BasePlayer):
         return self._data.get("role")
 
     @property
-    def trophies(self) -> Union[int, None]:
+    def trophies(self) -> Optional[int]:
         return self._data.get("trophies")
 
 
@@ -31,7 +31,7 @@ class Club(BaseClub):
         self._data = data
 
     @property
-    def description(self) -> Union[str, None]:
+    def description(self) -> Optional[str]:
         return self._data.get("description")
 
     @property
@@ -39,15 +39,15 @@ class Club(BaseClub):
         return self._data.get("type")
 
     @property
-    def required_trophies(self) -> Union[int, None]:
+    def required_trophies(self) -> Optional[int]:
         return self._data.get("requiredTrophies")
 
     @property
-    def trophies(self) -> Union[int, None]:
+    def trophies(self) -> Optional[int]:
         return self._data.get("trophies")
 
     @property
-    def members(self) -> Union[List[ClubMember], None]:
+    def members(self) -> Optional[List[ClubMember]]:
         if self._data.get("members"):
             return [ClubMember(data=i) for i in self._data["members"]]
         return None
