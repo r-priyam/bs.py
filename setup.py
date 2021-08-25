@@ -5,7 +5,7 @@ import subprocess
 import setuptools
 from setuptools import setup
 
-with open(os.path.join(os.getcwd(), "requirements.txt")) as f:
+with open("requirements.txt") as f:
     REQUIREMENTS = f.read().splitlines()
 
 
@@ -38,10 +38,15 @@ setup(
     python_requires=">=3.6.0",
     install_requires=REQUIREMENTS,
     classifiers={
+        "Development Status :: 4 - Beta",
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+    },
+    project_urls={
+        "Source": "https://github.com/priyamroy/bs.py",
+        "Tracker": "https://github.com/priyamroy/bs.py/issues",
     },
 )
