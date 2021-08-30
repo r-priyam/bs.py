@@ -3,12 +3,12 @@ __all__ = (
     "BaseClub",
     "BaseModel",
     "BaseBrawler",
+    "BaseBattle",
     "StarPower",
-    "Gadget",
-    "Event"
+    "Gadget"
 )
 
-from typing import List
+from typing import List, Literal, Optional
 
 
 class BasePlayer:
@@ -18,7 +18,7 @@ class BasePlayer:
         return self.name
 
     def __repr__(self):
-        return "<%s tag=%s name=%s>" % (
+        return "<%s tag=%s name='%s'>" % (
             self.__class__.__name__,
             self.tag,
             self.name,
@@ -27,12 +27,12 @@ class BasePlayer:
     def __eq__(self, other):
         return isinstance(other, BasePlayer) and self.tag == other.tag
 
-    def __init__(self, *, data, client=None, **_):
+    def __init__(self, *, data: dict, client=None, **_):
         self._client = client
         self._response_retry = data.get("_response_retry")
 
-        self.tag: str = data.get("tag")
-        self.name: str = data.get("name")
+        self.tag: Optional[str] = data.get("tag")
+        self.name: Optional[str] = data.get("name")
 
 
 class BaseClub:
@@ -45,22 +45,22 @@ class BaseClub:
         return self.name
 
     def __repr__(self):
-        return "<%s tag=%s name=%s>" % (
+        return "<%s tag=%s name='%s'>" % (
             self.__class__.__name__,
             self.tag,
             self.name,
         )
 
     def __init__(self, *, data: dict):
-        self._name = data.get("name")
-        self._tag = data.get("tag")
+        self._name: Optional[str] = data.get("name")
+        self._tag: Optional[str] = data.get("tag")
 
     @property
-    def name(self) -> str:
+    def name(self) -> Optional[str]:
         return self._name
 
     @property
-    def tag(self) -> str:
+    def tag(self) -> Optional[str]:
         return self._tag
 
 
@@ -68,8 +68,8 @@ class BaseModel:
     __slots__ = ("_id", "_name")
 
     def __init__(self, *, data: dict):
-        self._id = data.get("id")
-        self._name = data.get("name")
+        self._id: Optional[int] = data.get("id")
+        self._name: Optional[str] = data.get("name")
 
     def __eq__(self, other):
         return isinstance(self, other) and self.id == other.id and self.name == other.name
@@ -82,11 +82,11 @@ class BaseModel:
         )
 
     @property
-    def id(self) -> int:
+    def id(self) -> Optional[int]:
         return self._id
 
     @property
-    def name(self) -> str:
+    def name(self) -> Optional[str]:
         return self._name
 
 
@@ -107,41 +107,38 @@ class BaseBrawler(BaseModel):
         self._gadgets = data.get("gadgets")
 
     @property
-    def star_powers(self) -> List[StarPower]:
-        return [StarPower(data=i) for i in self._star_powers]
+    def star_powers(self) -> Optional[List[StarPower]]:
+        return [StarPower(data=i) for i in self._star_powers] if self._star_powers else None
 
     @property
-    def gadgets(self) -> List[Gadget]:
-        return [Gadget(data=i) for i in self._gadgets]
+    def gadgets(self) -> Optional[List[Gadget]]:
+        return [Gadget(data=i) for i in self._gadgets] if self._gadgets else None
 
 
-class Event:
-    __slots__ = (
-        "_id",
-        "_mode",
-        "_map"
-    )
-
-    def __init__(self, *, data: dict):
-        self._id = data.get("id")
-        self._mode = data.get("mode")
-        self._map = data.get("map")
+class BaseBattle:
+    __slots__ = ("_mode", "_type", "_trophy_change")
 
     def __repr__(self):
-        return "<%s Mode='%s' Map='%s'" % (
+        return "<%s type='%s', mode='%s', trophy_changed=%s>" % (
             self.__class__.__name__,
-            self._mode,
-            self._map
+            self.battle_type,
+            self.mode,
+            self.trophy_change,
         )
-    
-    @property
-    def id(self) -> int:
-        return self._id
+
+    def __init__(self, *, data: dict):
+        self._mode = data.get("mode")
+        self._type = data.get("type")
+        self._trophy_change = data.get("trophyChange")
 
     @property
-    def mode(self) -> str:
+    def mode(self) -> Optional[str]:
         return self._mode
 
     @property
-    def map(self) -> str:
-        return self._map
+    def trophy_change(self) -> Optional[int]:
+        return self._trophy_change
+    
+    @property
+    def battle_type(self) -> Optional[Literal["ranked", "friendly", "challenge"]]:
+        return self._type

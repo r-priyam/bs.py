@@ -3,7 +3,7 @@ import logging
 from typing import Type, Union, List
 
 from .abc import BaseBrawler
-from .battle_logs import BattleLog
+from .battles import BattleLogEntry
 from .clubs import Club, ClubMember
 from .http import BasicThrottler, BatchThrottler, HTTPClient
 from .players import Player
@@ -38,7 +38,9 @@ class Client:
         self.correct_key_count = max(min(KEY_MAXIMUM, key_count), KEY_MINIMUM)
 
         if key_count != self.correct_key_count:
-            raise RuntimeError(f"Key count must be within {KEY_MINIMUM}-{KEY_MAXIMUM}")
+            raise RuntimeError(
+                f"Key count must be within {KEY_MINIMUM}-{KEY_MAXIMUM}"
+            )
 
         self.key_names = key_names
         self.throttle_limit = throttle_limit
@@ -105,14 +107,16 @@ class Client:
                 await self.http.reset_key(keys[i])
             self._ready.set()
 
-    async def get_player_battle_log(self, player_tag: str) -> List[BattleLog]:
+    async def get_player_battle_log(
+        self, player_tag: str
+    ) -> List[BattleLogEntry]:
         if self.correct_tags:
             player_tag = correct_tag(player_tag)
 
         if self.http:
             data = await self.http.get_player_battle_log(player_tag)
             data_list = data.get("items")
-            return [BattleLog(data=i) for i in data_list]
+            return [BattleLogEntry(data=i) for i in data_list]
 
     async def get_player(self, player_tag: str) -> Player:
         if self.correct_tags:
@@ -141,18 +145,13 @@ class Client:
             data_list = data.get("items")
             return [ClubMember(data=i) for i in data_list]
 
-    async def get_brawlers(
-            self, limit: int = None
-    ) -> List[BaseBrawler]:
+    async def get_brawlers(self, limit: int = None) -> List[BaseBrawler]:
         if self.http:
             data = await self.http.get_brawlers(limit=limit)
             data_list = data.get("items")
             return [BaseBrawler(data=i) for i in data_list]
 
-    async def get_brawler(
-            self,
-            brawler_id: int,
-    ) -> BaseBrawler:
+    async def get_brawler(self, brawler_id: int) -> BaseBrawler:
         if self.http:
             data = await self.http.get_brawler(brawler_id)
             return BaseBrawler(data=data)
