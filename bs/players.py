@@ -17,6 +17,7 @@ class Player(ClubPlayer):
         "tag",
         "name",
         "name_color",
+        "name_colour",
         "trophies",
         "best_trophies",
         "best_power_play_points",
@@ -26,8 +27,8 @@ class Player(ClubPlayer):
         "trio_victories",
         "duo_victories",
         "solo_victories",
-        "best_roborumble_time",
-        "best_bigbrawler_time",
+        "best_robo_rumble_time",
+        "best_big_brawler_time",
     )
 
     def __init__(self, *, data) -> None:
@@ -39,6 +40,7 @@ class Player(ClubPlayer):
         self.tag: Optional[str] = data_get("tag")
         self.name: Optional[str] = data_get("name")
         self.name_color: Optional[str] = data_get("nameColor")
+        self.name_colour = self.name_color
         self.trophies: Optional[int] = data_get("trophies")
         self.best_trophies: Optional[int] = data_get("highestTrophies")
         self.best_power_play_points: Optional[int] = data_get("highestPowerPlayPoints")
@@ -48,5 +50,5 @@ class Player(ClubPlayer):
         self.trio_victories: Optional[int] = data_get("3vs3Victories")
         self.duo_victories: Optional[int] = data_get("duoVictories")
         self.solo_victories: Optional[int] = data_get("soloVictories")
-        self.best_roborumble_time: Optional[int] = data_get("bestRoboRumbleTime")
-        self.best_bigbrawler_time: Optional[int] = data_get("bestTimeAsBigBrawler")
+        self.best_robo_rumble_time: Optional[int] = data_get("bestRoboRumbleTime")
+        self.best_big_brawler_time: Optional[int] = data_get("bestTimeAsBigBrawler")
