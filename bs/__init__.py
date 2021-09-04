@@ -1,4 +1,4 @@
-__version__ = "0.0.2b"  # 2nd beta release
+__version__ = "1.0.0"
 
 from .client import Client
 from .login import login
