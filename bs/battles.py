@@ -16,6 +16,9 @@ __all__ = (
 
 
 class Brawler(BaseModel):
+    """
+    Represents a Battle log brawler.
+    """
     def __init__(self, *, data: dict):
         super().__init__(data=data)
         self._power_level = data.get("power")
@@ -31,6 +34,7 @@ class Brawler(BaseModel):
 
 
 class BattlePlayer(BasePlayer):
+    """Represents a battle log player"""
     def __init__(self, *, data: dict):
         super().__init__(data=data)
         self._brawler_data = data.get("brawler")

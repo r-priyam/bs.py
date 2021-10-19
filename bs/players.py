@@ -13,6 +13,7 @@ class ClubPlayer:
 
 
 class Player(ClubPlayer):
+    """Represents a player"""
     __slots__ = (
         "tag",
         "name",
