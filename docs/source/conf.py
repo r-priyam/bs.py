@@ -14,7 +14,6 @@ import os
 import re
 import sys
 sys.path.insert(0, os.path.abspath('..'))
-sys.path.append(os.path.abspath('extensions'))
 
 
 # -- Project information -----------------------------------------------------
@@ -45,6 +44,7 @@ extensions = [
 
 rst_prolog = """
 .. |coro| replace:: This function is a |coroutine_link|_.
+.. |inherits| replace:: This class inherits from
 .. |coroutine_link| replace:: *coroutine*
 .. _coroutine_link: https://docs.python.org/3/library/asyncio-task.html#coroutine
 """

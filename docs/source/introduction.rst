@@ -1,12 +1,20 @@
 Introduction
 ============
 
-A cool library
+bs.py is an async library for accessing Brawl Stars API.
+
 
 Installation
 ------------
-pip install lol
+
+.. code-block::
+
+    pip install bs.py
 
 Examples
 --------
-kek
+
+See examples `here.`_
+
+    .. _here.: https://github.com/r-priyam/bs.py/tree/master/examples
+

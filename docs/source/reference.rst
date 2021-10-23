@@ -1,7 +1,6 @@
 API Reference
 =============
 
-Primary class is :class:`Client`
 
 .. toctree::
     :maxdepth: 3
